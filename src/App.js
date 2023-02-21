@@ -1,25 +1,45 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import Message from './components/Message';
+import Form from './components/Form';
+import ChatList from './components/ChatList';
+import { useState, useEffect, useRef } from 'react';
 
 function App() {
+  const [text, setText] = useState('');
+  const [messageList, setMessageList] = useState([]);
+  const [chatList, setChatList] = useState([{ id: '1', name: 'MainChat' }, { id: '2', name: 'SecondChat' }, { id: '3', name: 'ThirdChat' }]);
+
+  const inputElement = useRef(null);
+  
+  const addTextMessage = (event) => {
+    setText(event.target.value);
+  };
+
+  useEffect(() => {
+    setTimeout(() => {
+      console.log('useEffect');
+    }, 2000);
+  },[messageList]);
+
+
+  const addMessage = () => {
+    inputElement.current?.focus();
+    setMessageList([...messageList, { name: 'Anton', message: text }]);
+    console.log(messageList);
+    setText('');
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App">  
+      <ChatList listChat={chatList} />
+      <div className='chatField'>
+        <Message data={messageList} />
+        <Form addText={addTextMessage} addMess={addMessage} valInp={text} focus={inputElement} />
+      </div>
     </div>
   );
 }
 
 export default App;
+
+ 
