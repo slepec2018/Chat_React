@@ -1,12 +1,15 @@
 import React from "react"
 
-const Message = ({data}) => {
+const Message = ({ listChat, chatId }) => {
+  
+  const actualList = listChat[chatId].messages;
+
   return (
     <div className="chatDesk">
-      {data.map((element, index) => (
+      {actualList.map((element, index) => (
         <div className="message" key={index}>
-          <div>{element.name}</div>
-          <div>{element.message}</div>
+          <div>{element.author}</div>
+          <div>{element.text}</div>
         </div>
       ))}
     </div>

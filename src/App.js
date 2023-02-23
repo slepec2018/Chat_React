@@ -1,13 +1,31 @@
+import { Route, BrowserRouter, Routes } from 'react-router-dom';
 import './App.scss';
-import Message from './components/Message';
-import Form from './components/Form';
-import ChatList from './components/ChatList';
+import ChatNav from './components/ChatNav';
+import ChatMain from './components/ChatMain';
+import Profile from './pages/Profile';
+import NotFound from './pages/NotFound'
 import { useState, useEffect, useRef } from 'react';
+
+const initialChats = {
+  id1: {
+  name: "Chat1",
+  messages: [{ text: "FirstMessage", author: 'Anton' }],
+  },
+  id2: {
+  name: "Chat2",
+  messages: [{ text: "FirstMessageHereToo!", author: 'Anton' }],
+  },
+  id3: {
+    name: "Chat3",
+    messages: [{ text: "FirstMessageHereToo!", author: 'Anton' }],
+    },
+  };
+  
 
 function App() {
   const [text, setText] = useState('');
   const [messageList, setMessageList] = useState([]);
-  const [chatList, setChatList] = useState([{ id: '1', name: 'MainChat' }, { id: '2', name: 'SecondChat' }, { id: '3', name: 'ThirdChat' }]);
+  const [chatList, setChatList] = useState(initialChats);
 
   const inputElement = useRef(null);
   
@@ -30,13 +48,36 @@ function App() {
   };
 
   return (
-    <div className="App">  
-      <ChatList listChat={chatList} />
-      <div className='chatField'>
-        <Message data={messageList} />
-        <Form addText={addTextMessage} addMess={addMessage} valInp={text} focus={inputElement} />
+    <BrowserRouter>
+      <div className="App">
+        <ChatNav />
+        <Routes>
+          <Route
+            path='/'
+            element={
+              <ChatMain
+                chatList={chatList}
+              />
+            }
+          />
+          <Route path='/profile' element={<Profile />} />
+          <Route
+            path='/chats/:chatId'
+            element={
+              <ChatMain
+                chatList={chatList}
+                messageList={messageList}
+                addTextMessage={addTextMessage}
+                addMessage={addMessage}
+                messageText={text}
+                inputElement={inputElement}
+              />
+            }
+          />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
       </div>
-    </div>
+    </BrowserRouter>
   );
 }
 
