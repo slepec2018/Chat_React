@@ -2,16 +2,29 @@ import ChatList from "./ChatList";
 import Message from "./Message";
 import Form from "./Form";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
-const ChatMain = ({ chatList, messageList, addTextMessage, addMessage, messageText, inputElement }) => {
+const ChatMain = () => {
+    const chats = useSelector(state => state.chats.chatList);
     const { chatId } = useParams();
+
+    if (chats.length === 0 ) {
+        return (
+            <div className="chatMain">
+                <ChatList />
+                <div className='chooseChat'>
+                    <p>Для начала общения создайте чат.</p>
+                </div>
+            </div>
+        )
+    }
 
     if (!chatId) {
         return (
             <div className="chatMain">
-                <ChatList listChat={chatList} chatId={chatId} />
+                <ChatList />
                 <div className='chooseChat'>
-                    <p>Для начала общения выберете чат.</p>
+                    <p>Для начала общения выберите чат.</p>
                 </div>
             </div>
         )
@@ -19,10 +32,10 @@ const ChatMain = ({ chatList, messageList, addTextMessage, addMessage, messageTe
 
     return (
         <div className="chatMain">
-            <ChatList listChat={chatList} chatId={chatId} />
+            <ChatList />
             <div className='chatField'>
-                <Message data={messageList} listChat={chatList} chatId={chatId}/>
-                <Form addText={addTextMessage} addMess={addMessage} valInp={messageText} focus={inputElement} />
+                <Message chatId={chatId} />
+                <Form chatId={chatId} />
             </div>
         </div>
     )
